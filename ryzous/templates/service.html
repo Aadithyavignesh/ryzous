@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryzous - Ethical Hacking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #cc00ff; /* Deep Violet */
+            --accent-glow: rgba(204, 0, 255, 0.4);
+            --accent-secondary: #7a00ff; /* Lighter Violet */
+            --bg: #02050a;
+            --bg2: #050a12;
+            --card-bg: rgba(5, 10, 18, 0.6);
+            --border: rgba(204, 0, 255, 0.2);
+            --text: #ffffff;
+            --text-muted: #8a8f98;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at top, #08121c 0%, #02050a 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* SHARED BACKGROUND EFFECTS */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                radial-gradient(var(--accent) 0.5px, transparent 0.5px);
+            background-size: 100% 4px, 30px 30px;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* NAVIGATION */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+            height: 80px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-box {
+            width: 40px; height: 40px; border: 2px solid var(--accent); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-weight: 800; box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        nav h1 { color: var(--accent); font-size: 24px; text-shadow: 0 0 12px var(--accent-glow); letter-spacing: 2px; }
+        nav ul { display: flex; gap: 30px; list-style: none; }
+        nav ul li a { text-decoration: none; color: var(--text); font-size: 14px; transition: 0.3s; }
+        nav ul li a:hover { color: var(--accent); text-shadow: 0 0 8px var(--accent-glow); }
+
+        /* SERVICES SECTION */
+        .services-section {
+            padding: 100px 60px;
+            max-width: 1300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .services-header h2 {
+            font-size: 3rem;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .services-header .line {
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 0 auto 25px;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .services-header p {
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 0.9rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: left;
+            position: relative;
+            transition: 0.4s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(204, 0, 255, 0.1);
+        }
+
+        .service-icon {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            display: block;
+            color: var(--accent);
+            filter: drop-shadow(0 0 5px var(--accent-glow));
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            color: var(--text);
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 40px;
+            flex-grow: 1;
+        }
+
+        .feature-list li {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .feature-list li::before {
+            content: "◎";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .card-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 25px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: fit-content;
+            text-decoration: none; /* Added for anchor tags */
+        }
+
+        .card-btn:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* HOW WE WORK SECTION */
+        .process-section {
+            padding: 100px 60px;
+            max-width: 1300px;
+            margin: 0 auto;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .process-header h2 {
+            font-size: 3rem;
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .process-header .line {
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            margin: 0 auto 30px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .process-header p {
+            color: var(--text-muted);
+            margin-bottom: 80px;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .process-card {
+            background: rgba(204, 0, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 50px 30px;
+            text-align: left;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .process-card:hover {
+            border-color: var(--accent);
+            background: rgba(204, 0, 255, 0.08);
+            box-shadow: 0 0 20px rgba(204, 0, 255, 0.1);
+        }
+
+        .process-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 25px;
+            display: block;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .process-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .process-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* SMALL COMPACT CONTACT SECTION */
+        .contact-cta {
+            padding: 50px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background: var(--bg2);
+        }
+
+        .contact-cta p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none; /* Critical to remove underline from <a> */
+        }
+
+        .contact-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* FOOTER STYLES */
+        footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 60px 60px 30px; }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; margin-bottom: 40px; }
+        .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .footer-brand-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+        .footer-col-title { font-size: 14px; color: var(--text); margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
+
+        @media (max-width: 1024px) {
+            .process-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .process-section, .services-section { padding: 40px 20px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            nav { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo-area">
+        <div class="logo-box">R</div>
+        <h1>RYZOUS</h1>
+    </div>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/service">Services</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+</nav>
+
+<section class="services-section">
+    <div class="services-header">
+        <h2>Our Services</h2>
+        <div class="line"></div>
+        <p>Comprehensive cybersecurity solutions built for modern threat landscapes.</p>
+    </div>
+
+    <div class="services-grid">
+        <div class="service-card">
+            <span class="service-icon">🛡️</span>
+            <h3>WEB PENETRATION TESTING</h3>
+            <p>We simulate the full attacker playbook against your web applications, APIs, and business logic flaws. Every engagement produces a prioritized findings report.</p>
+            <ul class="feature-list">
+                <li>Full OWASP Top 10 vulnerability coverage</li>
+                <li>Authenticated & unauthenticated attack surface mapping</li>
+                <li>Real-world attack simulation with PoC exploits</li>
+                <li>Business logic flow identification</li>
+                <li>Remediation validation retest included</li>
+            </ul>
+            <a href="/contact" class="card-btn">Get Started <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🔍</span>
+            <h3>API SECURITY TESTING</h3>
+            <p>Modern apps live and die by their APIs. Our testing goes beyond OWASP API Top 10 to uncover chained logic exploits and improper asset management.</p>
+            <ul class="feature-list">
+                <li>REST, GraphQL, gRPC & WebSocket testing</li>
+                <li>Authentication & authorization bypass testing</li>
+                <li>Injection attack vectors (SQLi, NoSQLi)</li>
+                <li>Rate limiting & resource exhaustion analysis</li>
+                <li>API schema validation & fuzzing</li>
+            </ul>
+            <a href="/contact" class="card-btn">Get Started <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🌐</span>
+            <h3>NETWORK TESTING</h3>
+            <p>From your external perimeter to your internal infrastructure, our network penetration testing exposes the paths an attacker would exploit to gain a foothold.</p>
+            <ul class="feature-list">
+                <li>External & internal network perimeter scanning</li>
+                <li>Firewall & ACL rule analysis</li>
+                <li>Port enumeration & service fingerprinting</li>
+                <li>Lateral movement & privilege escalation testing</li>
+                <li>VPN & remote access security review</li>
+                <li>Network segmentation validation</li>
+            </ul>
+            <a href="/contact" class="card-btn">Get Started <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">&lt;/&gt;</span>
+            <h3>CODE REVIEW</h3>
+            <p>Secure code review catches vulnerabilities before they reach production. Our engineers perform manual static analysis alongside automated tooling to identify insecure patterns.</p>
+            <ul class="feature-list">
+                <li>Manual static analysis by senior security engineers</li>
+                <li>Automated dependency & SCA vulnerability scanning</li>
+                <li>Hardcoded secrets & credential detection</li>
+                <li>Cryptographic implementation review</li>
+                <li>Secure coding recommendations with code examples</li>
+                <li>Architecture & design pattern security review</li>
+            </ul>
+            <a href="/contact" class="card-btn">Get Started <span>→</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="process-section">
+    <div class="process-header">
+        <h2>HOW WE WORK</h2>
+        <div class="line"></div>
+        <p>A disciplined three-phase methodology that delivers measurable results on every engagement.</p>
+    </div>
+
+    <div class="process-grid">
+        <div class="process-card">
+            <span class="process-number">01</span>
+            <h3>INITIAL ASSESSMENT</h3>
+            <p>Scope definition, threat modeling, and asset inventory. We align on objectives and rules of engagement before a single packet is sent.</p>
+        </div>
+
+        <div class="process-card">
+            <span class="process-number">02</span>
+            <h3>DEEP ANALYSIS</h3>
+            <p>Active enumeration, exploitation, and lateral movement. We use the full attacker playbook to discover vulnerabilities with real proof-of-concept evidence.</p>
+        </div>
+
+        <div class="process-card">
+            <span class="process-number">03</span>
+            <h3>REPORT & FIX</h3>
+            <p>Severity-ranked findings, executive summary, and remediation guidance. We stay engaged through retesting to confirm every issue is resolved.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-cta">
+    <p>Still have questions? Our team responds within 24 hours.</p>
+    <a href="/contact" class="contact-btn">
+        CONTACT US <span>→</span>
+    </a>
+</section>
+
+<footer>
+    <div class="footer-grid">
+        <div>
+            <div class="footer-logo">
+                <div class="logo-box">R</div>
+                <h1 style="font-size: 20px; color: var(--accent);">RYZOUS</h1>
+            </div>
+            <p class="footer-brand-text">Think Like a Hacker. Defend Like a Pro. We provide elite cybersecurity testing for modern infrastructure.</p>
+        </div>
+        <div>
+            <div class="footer-col-title">Navigation</div>
+            <ul class="footer-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/service">Services</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-col-title">Services</div>
+            <ul class="footer-links">
+                <li><a href="/contact">Web Pentesting</a></li>
+                <li><a href="/contact">API Security</a></li>
+                <li><a href="/contact">Network Testing</a></li>
+                <li><a href="/contact">Code Review</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2026 Ryzous. All rights reserved. Secure Infrastructure Guaranteed.</span>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryzous - Ethical Hacking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #cc00ff;
+            --accent-glow: rgba(204, 0, 255, 0.8);
+            --bg: #02050a;
+            --bg2: #050a12;
+            --card: rgba(0, 0, 0, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-muted: #8a8f98;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at center, #08121c 0%, #02050a 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Scanline and Grid Overlay Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                radial-gradient(var(--accent) 0.5px, transparent 0.5px);
+            background-size: 100% 4px, 30px 30px;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* NAVIGATION */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+            height: 80px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-box {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 800;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        nav h1 {
+            color: var(--accent);
+            font-size: 24px;
+            text-shadow: 0 0 12px var(--accent-glow);
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover { color: var(--accent); }
+
+        /* CONTACT HEADER */
+        .contact-header {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        .contact-header h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .contact-header h2::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            margin: 15px auto 0;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* CONTACT LAYOUT */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 40px 60px;
+        }
+
+        .contact-form-card {
+            background: rgba(5, 5, 5, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(204, 0, 255, 0.1);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+
+        .form-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            color: white;
+            transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .form-submit {
+            width: 100%;
+            background: linear-gradient(45deg, var(--accent), #ff26ff);
+            color: #000;
+            border: none;
+            padding: 16px;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* FORM MESSAGE */
+        .form-message {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-size: 14px;
+            text-align: center;
+            border: 1px solid;
+        }
+
+        .form-message.success {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+            color: #00ff00;
+            display: block;
+        }
+
+        .form-message.error {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+            color: #ff0000;
+            display: block;
+        }
+
+        .contact-sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .side-card { padding: 25px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); }
+        .side-card h3 { color: var(--accent); margin-bottom: 10px; font-size: 16px; }
+
+        /* STATUS CARDS SECTION */
+        .status-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto 80px;
+            padding: 0 40px;
+        }
+
+        .status-card {
+            flex: 1;
+            background: rgba(5, 10, 18, 0.4);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .status-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* FOOTER */
+        .main-footer {
+            border-top: 1px solid var(--border);
+            padding: 80px 60px 40px;
+            background: rgba(2, 5, 10, 0.8);
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-brand .tagline {
+            margin-top: 15px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 100px;
+        }
+
+        .link-group h4 {
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .link-group ul {
+            list-style: none;
+        }
+
+        .link-group ul li {
+            margin-bottom: 12px;
+        }
+
+        .link-group ul li a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .link-group ul li a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 60px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* RESPONSIVENESS */
+        @media (max-width: 900px) {
+            .contact-layout { grid-template-columns: 1fr; }
+            .status-container { flex-direction: column; }
+            .footer-links { gap: 40px; }
+            nav { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo-area">
+        <div class="logo-box">R</div>
+        <h1>RYZOUS</h1>
+    </div>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/service">Services</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+</nav>
+
+<div class="contact-header">
+    <h2>GET IN TOUCH</h2>
+    <p style="color: var(--text-muted);">Encrypted channels for your security inquiries.</p>
+</div>
+
+<div class="contact-layout">
+    <div class="contact-form-card">
+        <form id="contactForm">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input class="form-input" type="text" name="full_name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <input class="form-input" type="tel" name="mobile" placeholder="Enter your mobile number" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input class="form-input" type="email" name="email" placeholder="Enter your email address" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Incident Brief</label>
+                <textarea class="form-input" name="incident_brief" style="height: 150px;" placeholder="Describe the vulnerability or project scope..." required></textarea>
+            </div>
+
+            <button type="submit" class="form-submit" id="submitBtn">Initiate Contact →</button>
+            <div id="formMessage" class="form-message"></div>
+        </form>
+    </div>
+
+    <div class="contact-sidebar">
+        <div class="side-card">
+            <h3>Direct Link</h3>
+            <p style="color: var(--text-muted); font-size: 14px;">ryzous.service@gmail.com</p>
+        </div>
+        <div class="side-card">
+            <h3>24/7 Response</h3>
+            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6;">
+                Our rapid response team is active globally to handle critical security breaches.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="status-container">
+    <div class="status-card">
+        <span class="status-label">Response Time</span>
+        <span class="status-value">Within 24 hours</span>
+    </div>
+    <div class="status-card">
+        <span class="status-label">Data Security</span>
+        <span class="status-value">Fully Encrypted</span>
+    </div>
+    <div class="status-card">
+        <span class="status-label">Availability</span>
+        <span class="status-value">Global</span>
+    </div>
+</div>
+
+<footer class="main-footer">
+    <div class="footer-content">
+        <div class="footer-brand">
+            <div class="logo-area">
+                <div class="logo-box">R</div>
+                <h1>RYZOUS</h1>
+            </div>
+            <p class="tagline">Think Like a Hacker. Defend Like a Pro.</p>
+        </div>
+
+        <div class="footer-links">
+            <div class="link-group">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/service">Services</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-group">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="/contact">Web Pentesting</a></li>
+                    <li><a href="/contact">API Security</a></li>
+                    <li><a href="/contact">Network Testing</a></li>
+                    <li><a href="/contact">Code Review</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Ryzous. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    const messageDiv = document.getElementById('formMessage');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    // ✅ UPDATED: mobile replaces company_name
+    const formData = {
+        full_name: document.querySelector('input[name="full_name"]').value,
+        mobile: document.querySelector('input[name="mobile"]').value,
+        email: document.querySelector('input[name="email"]').value,
+        incident_brief: document.querySelector('textarea[name="incident_brief"]').value
+    };
+
+    try {
+        const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        messageDiv.classList.remove('error');
+        messageDiv.classList.remove('success');
+
+        if (response.ok) {
+            messageDiv.classList.add('success');
+            messageDiv.textContent = '✓ ' + result.message;
+            document.getElementById('contactForm').reset();
+            submitBtn.textContent = 'Initiate Contact →';
+            submitBtn.disabled = false;
+        } else {
+            messageDiv.classList.add('error');
+            messageDiv.textContent = '✗ Error: ' + result.error;
+            submitBtn.textContent = 'Initiate Contact →';
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        messageDiv.classList.add('error');
+        messageDiv.textContent = '✗ Network error: ' + error.message;
+        submitBtn.textContent = 'Initiate Contact →';
+        submitBtn.disabled = false;
+    }
+});
+</script>
+
+</body>
+</html>
